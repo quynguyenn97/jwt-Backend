@@ -49,7 +49,7 @@ const handleLogin = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             EM: "error from sever",
-            EC: -1,
+            EC: "-1",
             DT: "",
         });
     }

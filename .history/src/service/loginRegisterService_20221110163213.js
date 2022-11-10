@@ -80,7 +80,6 @@ const handleUserLogin = async (rawData) => {
             },
         });
         if (user) {
-            console.log("found user");
             let isCorrectPassword = checkPassword(
                 rawData.password,
                 user.password
@@ -95,7 +94,7 @@ const handleUserLogin = async (rawData) => {
         }
         console.log(
             ">>not found user with email/phone",
-            rawData.valueLogin,
+            rawData.value.Login,
             "password",
             rawData.password
         );

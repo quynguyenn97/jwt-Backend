@@ -40,7 +40,7 @@ const handleRegister = async (req, res) => {
 
 const handleLogin = async (req, res) => {
     try {
-        let data = await loginRegisterService.handleUserLogin(req.body);
+        let data = await loginRegisterService.handleLogin(req.body);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -49,7 +49,7 @@ const handleLogin = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             EM: "error from sever",
-            EC: -1,
+            EC: "-1",
             DT: "",
         });
     }
