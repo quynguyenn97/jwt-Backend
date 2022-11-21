@@ -22,7 +22,7 @@ const configCors = (app) => {
         // to the API (e.g. in case you use sessions)
         res.setHeader("Access-Control-Allow-Credentials", true);
 
-        if (req.method === "OPTIONS") {
+        if (req.method === "OPTIONs") {
             return res.sendStatus(200);
         }
         // Pass to next layer of middleware

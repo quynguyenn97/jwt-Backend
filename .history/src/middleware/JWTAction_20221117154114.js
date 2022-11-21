@@ -1,14 +1,12 @@
 import jwt from "jsonwebtoken";
 require("dotenv").config();
-const nonSecurePaths = ["/", "/register", "/login", "/logout"];
+const nonSecurePaths = ["/", "/register", "/login"];
 
 const createJWT = (payload) => {
     let key = process.env.JWT_SECRET;
     let token = null;
     try {
-        token = jwt.sign(payload, key, {
-            expiresIn: process.env.JWT_EXPIRES_IN,
-        });
+        token = jwt.sign(payload, key);
     } catch (err) {
         console.log(err);
     }
@@ -24,23 +22,11 @@ const verifyToken = (token) => {
     }
     return decoded;
 };
-
-const extractToken = (req) => {
-    if (
-        req.headers.authorization &&
-        req.headers.authorization.split(" ")[0] === "Bearer"
-    ) {
-        return req.headers.authorization.split(" ")[1];
-    }
-    return null;
-};
 const checkUserJWT = (req, res, next) => {
     if (nonSecurePaths.includes(req.path)) return next();
     let cookies = req.cookies;
-    let tokenFromHeader = extractToken(req);
-
-    if ((cookies && cookies.jwt) || tokenFromHeader) {
-        let token = cookies && cookies.jwt ? cookies.jwt : tokenFromHeader;
+    if (cookies && cookies.jwt) {
+        let token = cookies.jwt;
         let decoded = verifyToken(token);
         if (decoded) {
             req.user = decoded;
@@ -68,7 +54,6 @@ const checkUserPermission = (req, res, next) => {
         let email = req.user.email;
         let roles = req.user.groupWithRoles.Roles;
         let currentUrl = req.path;
-
         if (!roles || roles.length === 0) {
             return res.status(403).json({
                 EC: -1,

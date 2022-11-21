@@ -1,4 +1,6 @@
 import userApiService from "../service/userApiService";
+import roleApiService from "../service/roleApiService";
+
 const readFunc = async (req, res) => {
     try {
         if (req.query.page && req.query.limit) {
@@ -32,7 +34,7 @@ const readFunc = async (req, res) => {
 };
 const createFunc = async (req, res) => {
     try {
-        let data = await userApiService.createNewUser(req.body);
+        let data = await roleApiService.createNewGroup(req.body);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
