@@ -10,6 +10,7 @@ const getGroupWithRoles = async (user) => {
             through: { attributes: [] },
         },
     });
+    console.log("role getGroup", roles);
     return roles ? roles : {};
 };
 module.exports = {

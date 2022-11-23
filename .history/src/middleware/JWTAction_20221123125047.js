@@ -61,34 +61,35 @@ const checkUserJWT = (req, res, next) => {
         });
     }
 };
-const checkUserPermission = (req, res, next) => {
-    if (nonSecurePaths.includes(req.path) || req.path === "/account")
-        return next();
-    if (req.user) {
-        let email = req.user.email;
-        let roles = req.user.groupWithRoles.Roles;
-        let currentUrl = req.path;
-        if (!roles || roles.length === 0) {
-            return res.status(403).json({
-                EC: -1,
-                DT: "",
-                EM: `you dont permission to access this resource...`,
-            });
-        }
-        let canAccess = roles.some(
-            (item) => item.url === currentUrl || currentUrl.includes(item.url)
-        );
-        if (canAccess === true) {
-            next();
-        } else {
-            return res.status(403).json({
-                EC: -1,
-                DT: "",
-                EM: `you dont permission to access this resource...`,
-            });
-        }
-    }
-};
+// const checkUserPermission = (req, res, next) => {
+//     if (nonSecurePaths.includes(req.path) || req.path === "/account")
+//         return next();
+//     if (req.user) {
+//         let email = req.user.email;
+//         let roles = req.user.groupWithRoles.Roles;
+//         let currentUrl = req.path;
+
+//         if (!roles || roles.length === 0) {
+//             return res.status(403).json({
+//                 EC: -1,
+//                 DT: "",
+//                 EM: `you dont permission to access this resource...`,
+//             });
+//         }
+//         let canAccess = roles.some(
+//             (item) => item.url === currentUrl || currentUrl.includes(item.url)
+//         );
+//         if (canAccess === true) {
+//             next();
+//         } else {
+//             return res.status(403).json({
+//                 EC: -1,
+//                 DT: "",
+//                 EM: `you dont permission to access this resource...`,
+//             });
+//         }
+//     }
+// };
 module.exports = {
     createJWT,
     verifyToken,

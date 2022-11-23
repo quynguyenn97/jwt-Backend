@@ -109,16 +109,28 @@ const getRoleByGroup = async (id) => {
         };
     }
 };
-const assignRoleToGroup = async (data) => {
+const assignRoleToGroup = async () => {
     try {
-        await db.Group_Role.destroy({
-            where: { groupId: +data.groupId },
+        if (!id) {
+            return {
+                EM: `Not found any roles`,
+                EC: 0,
+                DT: [],
+            };
+        }
+        let roles = await db.Group.findOne({
+            where: { id: id },
+            attributes: ["id", "name", "description"],
+            include: {
+                model: db.Role,
+                attributes: ["id", "url", "description"],
+                through: { attributes: [] },
+            },
         });
-        await db.Group_Role.bulkCreate(data.groupRoles);
         return {
-            EM: `Assign Role Group succeeds`,
+            EM: `Get Role By Group succeeds`,
             EC: 0,
-            DT: [],
+            DT: roles,
         };
     } catch (error) {
         console.log(error);

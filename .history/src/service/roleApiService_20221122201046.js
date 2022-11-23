@@ -1,7 +1,6 @@
-import db from "../models/index";
+import db from "../models";
 const createNewRoles = async (roles) => {
     try {
-        console.log(roles);
         // const testArr = [
         //     { url: "test1", description: "abc" },
         //     { url: "/user/update", description: "abc" },
@@ -23,7 +22,7 @@ const createNewRoles = async (roles) => {
         }
         await db.Role.bulkCreate(persists);
         return {
-            EM: `Create roles succeeds: ${persists.length} roles..`,
+            EM: `Create roles cucceeds: ${persists.length} roles..`,
             EC: 0,
             DT: [],
         };
@@ -49,9 +48,9 @@ const getAllRoles = async () => {
     } catch (error) {
         console.log(error);
         return {
-            EM: "something worng with server",
+            EM: "user not exist",
             EC: 2,
-            DT: [],
+            DT: data,
         };
     }
 };
@@ -72,67 +71,9 @@ const deleteRole = async (id) => {
         console.log(error);
         return {
             EM: "err from server",
-            EC: 1,
-            DT: [],
+            EC: 2,
+            DT: data,
         };
     }
 };
-const getRoleByGroup = async (id) => {
-    try {
-        if (!id) {
-            return {
-                EM: `Not found any roles`,
-                EC: 0,
-                DT: [],
-            };
-        }
-        let roles = await db.Group.findOne({
-            where: { id: id },
-            attributes: ["id", "name", "description"],
-            include: {
-                model: db.Role,
-                attributes: ["id", "url", "description"],
-                through: { attributes: [] },
-            },
-        });
-        return {
-            EM: `Get Role By Group succeeds`,
-            EC: 0,
-            DT: roles,
-        };
-    } catch (error) {
-        console.log(error);
-        return {
-            EM: "err from server",
-            EC: 1,
-            DT: [],
-        };
-    }
-};
-const assignRoleToGroup = async (data) => {
-    try {
-        await db.Group_Role.destroy({
-            where: { groupId: +data.groupId },
-        });
-        await db.Group_Role.bulkCreate(data.groupRoles);
-        return {
-            EM: `Assign Role Group succeeds`,
-            EC: 0,
-            DT: [],
-        };
-    } catch (error) {
-        console.log(error);
-        return {
-            EM: "err from server",
-            EC: 1,
-            DT: [],
-        };
-    }
-};
-module.exports = {
-    createNewRoles,
-    getAllRoles,
-    deleteRole,
-    getRoleByGroup,
-    assignRoleToGroup,
-};
+module.exports = { createNewRoles, getAllRoles, deleteRole };

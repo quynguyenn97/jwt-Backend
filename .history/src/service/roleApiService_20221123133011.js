@@ -41,6 +41,7 @@ const getAllRoles = async () => {
         let data = await db.Role.findAll({
             order: [["id", "DESC"]],
         });
+        console.log("check all role", data);
         return {
             EM: `Get all roles succeeds`,
             EC: 0,

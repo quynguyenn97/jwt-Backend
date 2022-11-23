@@ -5,7 +5,6 @@ const handleLogin = (req, res) => {
 };
 const handleUserPage = async (req, res) => {
     // Cookies that have not been signed
-    console.log("Cookies: ", req.cookies);
     res.cookie("test", "test cookie");
     let userList = await userService.getUserList();
     return res.render("user.ejs", { userList });

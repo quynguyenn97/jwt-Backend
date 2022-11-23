@@ -67,7 +67,9 @@ const checkUserPermission = (req, res, next) => {
     if (req.user) {
         let email = req.user.email;
         let roles = req.user.groupWithRoles.Roles;
+        console.log("roles", roles);
         let currentUrl = req.path;
+        console.log("check user", req.user);
         if (!roles || roles.length === 0) {
             return res.status(403).json({
                 EC: -1,

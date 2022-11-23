@@ -3,12 +3,14 @@ import roleApiService from "../service/roleApiService";
 
 const readFunc = async (req, res) => {
     try {
-        let data = await roleApiService.getAllRoles();
-        return res.status(200).json({
-            EM: data.EM,
-            EC: data.EC,
-            DT: data.DT,
-        });
+            let data = await roleApiService.getAllRoles();
+            return res.status(200).json({
+                EM: data.EM,
+                EC: data.EC,
+                DT: data.DT,
+            });
+        
+        }
     } catch (e) {
         console.log(e);
         return res.status(500).json({
@@ -17,7 +19,6 @@ const readFunc = async (req, res) => {
             DT: "",
         });
     }
-};
 
 const createFunc = async (req, res) => {
     try {
@@ -57,7 +58,7 @@ const updateFunc = async (req, res) => {
 const deleteFunc = async (req, res) => {
     try {
         // console.log("check req", req.body.id);
-        let data = await roleApiService.deleteRole(req.body.id);
+        let data = await RoleApiService.deleteRole(req.body.id);
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -72,46 +73,22 @@ const deleteFunc = async (req, res) => {
         });
     }
 };
-const getRoleByGroup = async (req, res) => {
-    try {
-        let id = req.params.groupId;
-        let data = await roleApiService.getRoleByGroup(id);
-        return res.status(200).json({
-            EM: data.EM,
-            EC: data.EC,
-            DT: data.DT,
-        });
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            EM: "error from sever",
-            EC: -1,
-            DT: "",
-        });
-    }
-};
-const assignRoleToGroup = async (req, res) => {
-    try {
-        let data = await roleApiService.assignRoleToGroup(req.body.data);
-        return res.status(200).json({
-            EM: data.EM,
-            EC: data.EC,
-            DT: data.DT,
-        });
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            EM: "error from sever",
-            EC: -1,
-            DT: "",
-        });
-    }
+const getUserAccount = async (req, res) => {
+    return res.status(200).json({
+        EM: "ok",
+        EC: 0,
+        DT: {
+            access_token: req.token,
+            groupWithRoles: req.user.groupWithRoles,
+            email: req.user.email,
+            username: req.user.username,
+        },
+    });
 };
 module.exports = {
     readFunc,
     createFunc,
     updateFunc,
     deleteFunc,
-    getRoleByGroup,
-    assignRoleToGroup,
+    getUserAccount,
 };

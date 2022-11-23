@@ -111,12 +111,8 @@ const getRoleByGroup = async (id) => {
 };
 const assignRoleToGroup = async (data) => {
     try {
-        await db.Group_Role.destroy({
-            where: { groupId: +data.groupId },
-        });
-        await db.Group_Role.bulkCreate(data.groupRoles);
         return {
-            EM: `Assign Role Group succeeds`,
+            EM: `Get Role By Group succeeds`,
             EC: 0,
             DT: [],
         };

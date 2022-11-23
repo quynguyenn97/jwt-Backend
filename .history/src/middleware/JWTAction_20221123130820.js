@@ -67,14 +67,16 @@ const checkUserPermission = (req, res, next) => {
     if (req.user) {
         let email = req.user.email;
         let roles = req.user.groupWithRoles.Roles;
+        console.log("roles", roles);
         let currentUrl = req.path;
-        if (!roles || roles.length === 0) {
-            return res.status(403).json({
-                EC: -1,
-                DT: "",
-                EM: `you dont permission to access this resource...`,
-            });
-        }
+        console.log("check user", req.user);
+        // if (!roles || roles.length === 0) {
+        //     return res.status(403).json({
+        //         EC: -1,
+        //         DT: "",
+        //         EM: `you dont permission to access this resource...`,
+        //     });
+        // }
         let canAccess = roles.some(
             (item) => item.url === currentUrl || currentUrl.includes(item.url)
         );
