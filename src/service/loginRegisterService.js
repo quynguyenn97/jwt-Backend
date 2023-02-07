@@ -84,11 +84,15 @@ const handleUserLogin = async (rawData) => {
                 ],
             },
         });
+        console.log(user);
         if (user) {
             let isCorrectPassword = checkPassword(
                 rawData.password,
                 user.password
             );
+            console.log(rawData.password);
+            console.log(user.password);
+            console.log(isCorrectPassword);
             if (isCorrectPassword === true) {
                 let groupWithRoles = await getGroupWithRoles(user);
                 let payload = {

@@ -2,6 +2,9 @@ import { raw } from "body-parser";
 import db from "../models/index";
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
+import { getGroupWithRoles } from "./JWTService";
+import { createJWT } from "../middleware/JWTAction";
+require("dotenv").config();
 
 const salt = bcrypt.genSaltSync(10);
 const hashUserPassword = (password) => {
@@ -51,6 +54,8 @@ const registerNewUser = async (rawUserData) => {
             email: rawUserData.email,
             username: rawUserData.username,
             password: hashPassWord,
+            phone: rawUserData.phone,
+            groupId: 4,
         });
         return {
             EM: "A user is created successfully",
@@ -61,6 +66,7 @@ const registerNewUser = async (rawUserData) => {
         return {
             EM: "Something wrongs",
             EC: -2,
+            DT: "",
         };
     }
 };
@@ -78,20 +84,41 @@ const handleUserLogin = async (rawData) => {
                 ],
             },
         });
-        if (isEmailExist === false) {
-            return {
-                EM: "The email is already exist",
-                EC: 1,
-                DT: "",
-            };
+        console.log(user);
+        if (user) {
+            let isCorrectPassword = checkPassword(
+                rawData.password,
+                user.password
+            );
+            console.log(rawData.password);
+            console.log(user.password);
+            console.log(isCorrectPassword);
+            if (isCorrectPassword === true) {
+                let groupWithRoles = await getGroupWithRoles(user);
+                let payload = {
+                    email: user.email,
+                    groupWithRoles,
+                    username: user.username,
+                };
+                let token = createJWT(payload);
+                return {
+                    EM: "Ok",
+                    EC: 0,
+                    DT: {
+                        access_token: token,
+                        data: groupWithRoles,
+                        email: user.email,
+                        username: user.username,
+                    },
+                };
+            }
         }
-        if (isPhoneExist === true) {
-            return {
-                EM: "The phonenumber is already exist",
-                EC: 1,
-                DT: "",
-            };
-        }
+
+        return {
+            EM: "Your email/phone number or password is incorrect",
+            EC: -2,
+            DT: "",
+        };
     } catch (e) {
         console.log(e);
         return {
@@ -104,4 +131,7 @@ module.exports = {
     registerNewUser,
     handleUserLogin,
     checkPassword,
+    hashUserPassword,
+    checkEmailExist,
+    checkPhoneExist,
 };
